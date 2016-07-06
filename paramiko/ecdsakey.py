@@ -24,9 +24,15 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.asymmetric.utils import (
-    decode_dss_signature, encode_dss_signature
-)
+
+# Fix to allow continued use of cryptography==0.8.2
+try:
+    from cryptography.hazmat.primitives.asymmetric.utils import (
+        decode_dss_signature, encode_dss_signature
+    )
+except ImportError:
+    from cryptography.hazmat.primitives.asymmetric.utils import decode_rfc6979_signature as decode_dss_signature
+    from cryptography.hazmat.primitives.asymmetric.utils import encode_rfc6979_signature as encode_dss_signature
 
 from paramiko.common import four_byte
 from paramiko.message import Message
